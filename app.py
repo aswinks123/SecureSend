@@ -37,7 +37,7 @@ class SecureSendGUI(Gtk.Application):
         self.window.set_title("SecureSend")
 
         # Window size in pixels.
-        self.window.set_default_size(600, 400)
+        self.window.set_default_size(1000, 700)
 
         # Prevents the user from resizing the window.
         self.window.set_resizable(False)

@@ -14,7 +14,7 @@ class SecureSendUI:
 
 
 
-#-----------------creating  Elements--------------------------
+#-----------------creating LEFT SIDE Elements--------------------------
 
     def build_layout(self):  # function that created the UI elements
 
@@ -35,7 +35,7 @@ class SecureSendUI:
         # Adding a grid inside the box. Gtk.Grid lets you arrange elements in rows and columns.
         # here we are creating left side grid, hold left side elemets of the box.
 
-        left_grid = Gtk.Grid(column_spacing=10, row_spacing=10)
+        left_grid = Gtk.Grid(column_spacing=10, row_spacing=20)
         hbox.append(left_grid)  # places the grid inside the horizontal box.
 
 
@@ -44,13 +44,13 @@ class SecureSendUI:
         self.ip_entry = Gtk.Entry() #creates a text input box for the user to type the server IP."self.ip_entry " stores it so we can read its value later.
         left_grid.attach(self.ip_entry, 1, 0, 1, 1) # places the entry in column 1, row 0.
 
-
+        #Add username field
         #Same as the previous entry
         left_grid.attach(Gtk.Label(label="Username:"), 0, 1, 1, 1)
         self.user_entry = Gtk.Entry()
         left_grid.attach(self.user_entry, 1, 1, 1, 1)
 
-
+        #Add password field
         #Same as the previous entry
         left_grid.attach(Gtk.Label(label="Password:"), 0, 2, 1, 1)
         self.pass_entry = Gtk.Entry()
@@ -58,9 +58,94 @@ class SecureSendUI:
         left_grid.attach(self.pass_entry, 1, 2, 1, 1)
 
 
+        #Same as the previous entry
+        left_grid.attach(Gtk.Label(label="Destination Path:"), 0, 3, 1, 1)
+        self.destination_entry = Gtk.Entry()
+        self.destination_entry.set_text("/tmp/")  # Set default path
+        left_grid.attach(self.destination_entry, 1, 3, 1, 1)
+
+
+
         #Adding Send button
         self.send_btn = Gtk.Button(label="Send Files") #Creates a button labeled “Send Files”.
-        left_grid.attach(self.send_btn, 0, 3, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+        left_grid.attach(self.send_btn, 0, 4, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+
+
+        #Adding Clear button
+        self.clear_btn = Gtk.Button(label="Clear") #Creates a button labeled “Clear”.
+        left_grid.attach(self.clear_btn, 0, 5, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+
+
+
+
+#-----------------creating RIGHT SIDE Elements--------------------------
+
+
+# Right side frame
+        right_frame = Gtk.Frame()
+        right_frame.set_margin_top(10)
+        right_frame.set_margin_bottom(10)
+        right_frame.set_margin_start(10)
+        right_frame.set_margin_end(10)
+
+        right_frame.set_size_request(600, -1)  
+
+        # Inside the frame, create a vertical box for file labels
+        right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        right_frame.set_child(right_box)
+
+
+
+
+        # Horizontal box for the buttons (side by side)
+        buttons_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+        right_box.append(buttons_box)
+
+
+        # Add a choose file button inside the box
+        self.choose_files_btn = Gtk.Button(label="Choose Files")
+        self.choose_files_btn.set_hexpand(True)  
+        buttons_box.append(self.choose_files_btn)
+        
+
+
+        # "Clear" button
+        self.clear_btn = Gtk.Button(label="Clear Files")
+        self.clear_btn.set_hexpand(True)  
+        buttons_box.append(self.clear_btn)
+
+
+        self.files_label = Gtk.Label(label="(No files selected)")
+        right_box.append(self.files_label)
+
+
+        # Add the frame to the main hbox
+        hbox.append(right_frame)
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         #Returning the main container
