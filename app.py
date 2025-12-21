@@ -11,6 +11,10 @@ gi.require_version("Gtk", "4.0")
 #imports all GTK classes so you can use
 from gi.repository import Gtk
 
+#import the UI_element module that we created that holds the elements like button, label etc. 
+# check the file under modules directory.
+from modules.ui_elememts import SecureSendUI
+
 #--------------------------------------------------------
 
 # create GTK application class: we are creating a subsclass of "Gtk.Application" . it is the standard way to create GTK applications
@@ -27,19 +31,27 @@ class SecureSendGUI(Gtk.Application):
 
     def do_activate(self):
         # Gtk.ApplicationWindow is a window tied to your app. Always use this with Gtk.Application
-        window = Gtk.ApplicationWindow(application=self)
+        self.window = Gtk.ApplicationWindow(application=self)
 
         # Sets the text on the title bar.
-        window.set_title("SecureSend")
+        self.window.set_title("SecureSend")
 
         # Window size in pixels.
-        window.set_default_size(600, 400)
+        self.window.set_default_size(600, 400)
 
         # Prevents the user from resizing the window.
-        window.set_resizable(False)
+        self.window.set_resizable(False)
+
+
+        self.ui = SecureSendUI(self.window)
+        self.ui.build_layout()
+
+
+
+
 
         # Shows the window on the screen
-        window.present()
+        self.window.present()
 
 
 #--------------------------------------------------------
