@@ -1,3 +1,3 @@
 ## Sample screenshot of the Application
 
-![alt text](resources/image.pngimage.png)
+![alt text](resources/image.png)
