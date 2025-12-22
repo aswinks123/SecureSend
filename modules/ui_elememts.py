@@ -50,22 +50,33 @@ class SecureSendUI:
         self.user_entry = Gtk.Entry()
         left_grid.attach(self.user_entry, 1, 1, 1, 1)
 
-        #Add password field
-        #Same as the previous entry
-        left_grid.attach(Gtk.Label(label="Password:"), 0, 2, 1, 1)
+
+       # Authentication Type to choose password or passwordless
+        left_grid.attach(Gtk.Label(label="Auth Type:"), 0, 2, 1, 1)
+        self.auth_type_combo = Gtk.ComboBoxText()
+        self.auth_type_combo.append_text("Password")
+        self.auth_type_combo.append_text("Private Key")
+        self.auth_type_combo.set_active(0)  # default: Password
+        left_grid.attach(self.auth_type_combo, 1, 2, 1, 1)
+
+       
+        #Add password field   
+        left_grid.attach(Gtk.Label(label="Password:"), 0, 3, 1, 1)
         self.pass_entry = Gtk.Entry()
         self.pass_entry.set_visibility(False) #hides the text while typing
-        left_grid.attach(self.pass_entry, 1, 2, 1, 1)
+        left_grid.attach(self.pass_entry, 1, 3, 1, 1)
+
+
 
         #Same as the previous entry
-        left_grid.attach(Gtk.Label(label="Destination Path:"), 0, 3, 1, 1)
+        left_grid.attach(Gtk.Label(label="Destination Path:"), 0, 4, 1, 1)
         self.destination_entry = Gtk.Entry()
         self.destination_entry.set_text("/tmp/")  # Set default path
-        left_grid.attach(self.destination_entry, 1, 3, 1, 1)
+        left_grid.attach(self.destination_entry, 1, 4, 1, 1)
 
         #Adding Send button
-        self.send_btn = Gtk.Button(label="Send Files") #Creates a button labeled “Send Files”.
-        left_grid.attach(self.send_btn, 0, 4, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+        self.send_btn = Gtk.Button(label="Send") #Creates a button labeled “Send Files”.
+        left_grid.attach(self.send_btn, 0, 5, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
         
         # Function that handle sending logic
         self.send_btn.connect("clicked", self.on_send_files_clicked)
@@ -73,15 +84,20 @@ class SecureSendUI:
 
         #Adding Clear button
         self.clear_btn = Gtk.Button(label="Clear") #Creates a button labeled “Clear”.
-        left_grid.attach(self.clear_btn, 0, 5, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+        left_grid.attach(self.clear_btn, 0, 6, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
 
-        # Feedback label to show the success or failure message
+        # Progress Bar (under all entries, above Send button)
+        self.progress_bar = Gtk.ProgressBar()
+        self.progress_bar.set_show_text(True)  # show percentage
+        left_grid.attach(self.progress_bar, 0, 50, 2, 1)  # spans 2 columns
+
+
+       # Feedback label to show the success or failure message
         self.feedback_label = Gtk.Label(label="")
         self.feedback_label.set_wrap(True)
-        left_grid.attach(self.feedback_label, 0, 7, 2, 1)  # row 5, spanning 2 columns
+        left_grid.attach(self.feedback_label, 0, 8, 2, 1)  # row 5, spanning 2 columns
 
-
-
+     
 
 
 
@@ -166,8 +182,18 @@ class SecureSendUI:
         password = self.pass_entry.get_text()
         dest_path = self.destination_entry.get_text()
 
-        success, fail = send_files(self.files, server_ip, username, password, dest_path)
+         # Define a callback to update progress bar
+        def progress_callback(fraction):
+            self.progress_bar.set_fraction(fraction)
+            self.progress_bar.set_text(f"{int(fraction*100)}%")
 
+
+
+
+         # Send files
+        success, fail = send_files(self.files, server_ip, username, password, dest_path, progress_callback)
+
+         # Update feedback label
         if fail:
             result_text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
         else:

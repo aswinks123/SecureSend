@@ -11,6 +11,8 @@ gi.require_version("Gtk", "4.0")
 #imports all GTK classes so you can use
 from gi.repository import Gtk
 
+from gi.repository import Gtk, GdkPixbuf
+
 #import the UI_element module that we created that holds the elements like button, label etc. 
 # check the file under modules directory.
 from modules.ui_elememts import SecureSendUI
@@ -41,6 +43,8 @@ class SecureSendGUI(Gtk.Application):
 
         # Prevents the user from resizing the window.
         self.window.set_resizable(False)
+
+
 
 
         self.ui = SecureSendUI(self.window)

@@ -11,6 +11,7 @@ def choose_files_and_update(window, files_label, files_list):
     """
     dialog = Gtk.FileDialog()
     dialog.set_title("Select files")
+    
 
     # Open multiple selection
     dialog.open_multiple(
@@ -31,6 +32,7 @@ def on_files_selected(dialog, result, files_label, files_list):
             display_text.append(path)
 
         files_label.set_text("\n".join(display_text))
+        
 
     except Exception:
         # User cancelled dialog

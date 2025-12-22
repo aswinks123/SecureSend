@@ -1,13 +1,14 @@
 import paramiko
 import os
 
-def send_files(files, server_ip, username, password, dest_path):
+def send_files(files, server_ip, username, password, dest_path, progress_callback=None):
     """
     Sends a list of files to a remote server via SCP (using paramiko).
     Returns a tuple (success_list, fail_list)
     """
     success_list = []
     fail_list = []
+    total = len(files)
 
     # Connect to the server
     try:
@@ -25,13 +26,17 @@ def send_files(files, server_ip, username, password, dest_path):
             sftp.chdir(dest_path)
 
         # Send each file
-        for f in files:
+        for idx, f in enumerate(files, start=1):
             filename = os.path.basename(f)
             try:
                 sftp.put(f, os.path.join(dest_path, filename))
                 success_list.append(f)
             except Exception:
                 fail_list.append(f)
+             # Call progress callback if provided
+            if progress_callback:
+                fraction = idx / total
+                progress_callback(fraction)           
 
         sftp.close()
         ssh.close()
