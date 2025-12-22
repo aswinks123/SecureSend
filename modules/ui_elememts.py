@@ -14,9 +14,7 @@ class SecureSendUI:
         self.files = [] #This creates an empty list to store files that the user will select later.
 
 
-
-
-#-----------------creating LEFT SIDE Elements--------------------------
+#-----------------LEFT SIDE Elements--------------------------
 
     def build_layout(self):  # function that created the UI elements
 
@@ -29,6 +27,7 @@ class SecureSendUI:
         #puts this box inside the main window.
         self.window.set_child(hbox)
         # What we did is : Create a horizontal container with some space around it and put it inside the window.”
+
 
 
 
@@ -85,6 +84,8 @@ class SecureSendUI:
         #Adding Clear button
         self.clear_btn = Gtk.Button(label="Clear") #Creates a button labeled “Clear”.
         left_grid.attach(self.clear_btn, 0, 6, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+        # Function that handle clear logic
+        self.clear_btn.connect("clicked", self.clear_inputs)
 
         # Progress Bar (under all entries, above Send button)
         self.progress_bar = Gtk.ProgressBar()
@@ -96,13 +97,9 @@ class SecureSendUI:
         self.feedback_label = Gtk.Label(label="")
         self.feedback_label.set_wrap(True)
         left_grid.attach(self.feedback_label, 0, 8, 2, 1)  # row 5, spanning 2 columns
+   
 
-     
-
-
-
-#-----------------creating RIGHT SIDE Elements--------------------------
-
+#-----------------RIGHT SIDE Elements--------------------------
 
 # Right side frame
         right_frame = Gtk.Frame()
@@ -134,11 +131,6 @@ class SecureSendUI:
         buttons_box.append(self.clear_btn)
 
 
-
-
-
-
-
         # By default the no files are selected message is displayed in side the box.
         self.files_label = Gtk.Label(label="(No files selected)")
         right_box.append(self.files_label)
@@ -159,7 +151,7 @@ class SecureSendUI:
         self.feedback_label.set_text("")        
         choose_files_and_update(self.window, self.files_label, self.files)
 
-    # This function is used to clear the files that ae choosen by select files button sialogue box.
+    # This function is used to clear the files that are choosen by select files button sialogue box.
     def on_clear_clicked(self, button):
         self.files.clear()
         self.feedback_label.set_text("")
@@ -167,6 +159,15 @@ class SecureSendUI:
 
         # Reset send feedback label
         self.feedback_label.set_text("")
+
+
+    # function to clear the input boxes:     
+    def clear_inputs(self, button):
+        self.files.clear()
+        self.feedback_label.set_text("")
+        self.ip_entry.set_text("")
+        self.user_entry.set_text("")
+        self.pass_entry.set_text("")              
 
 
     # function that handle sending logic
@@ -186,8 +187,6 @@ class SecureSendUI:
         def progress_callback(fraction):
             self.progress_bar.set_fraction(fraction)
             self.progress_bar.set_text(f"{int(fraction*100)}%")
-
-
 
 
          # Send files
