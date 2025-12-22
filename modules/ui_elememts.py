@@ -1,6 +1,8 @@
 import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
+from modules.file_handler import choose_files_and_update
+
 
 # This defines a new class called SecureSendUI
 class SecureSendUI:
@@ -104,14 +106,16 @@ class SecureSendUI:
 
         # Add a choose file button inside the box
         self.choose_files_btn = Gtk.Button(label="Choose Files")
-        self.choose_files_btn.set_hexpand(True)  
+        self.choose_files_btn.set_hexpand(True)          
+        self.choose_files_btn.connect("clicked", self.on_choose_files_clicked)
         buttons_box.append(self.choose_files_btn)
         
-
+              
 
         # "Clear" button
         self.clear_btn = Gtk.Button(label="Clear Files")
         self.clear_btn.set_hexpand(True)  
+        self.clear_btn.connect("clicked", self.on_clear_clicked)
         buttons_box.append(self.clear_btn)
 
 
@@ -122,31 +126,50 @@ class SecureSendUI:
         # Add the frame to the main hbox
         hbox.append(right_frame)
 
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         #Returning the main container
         return hbox  #Returns the main horizontal box so it can be used later if needed.
+
+
+
+
+
+#----------FUNCTIONS TO HANDLE BUTTON EVENTS--------------------
+
+
+    # This function is used to open a file picker when choose File button is clicked and display it in the box. its implementation is in modules/file_handler.py
+    def on_choose_files_clicked(self, button):
+        choose_files_and_update(self.window, self.files_label, self.files)
+
+    # This function is used to clear the files that ae choosen by select files button sialogue box.
+    def on_clear_clicked(self, button):
+        self.files.clear()
+        self.files_label.set_text("(No files selected)")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
