@@ -2,16 +2,14 @@
 # About this file: This file is the main UI of the application.
 
 
-
 # gi is the GObject Introspection library. It allows Python to use libraries written in C, like GTK.
 import gi
+
 #ensures you are using GTK version 4. GTK 4 is the latest major version.
 gi.require_version("Gtk", "4.0")
 
 #imports all GTK classes so you can use
 from gi.repository import Gtk
-
-from gi.repository import Gtk, GdkPixbuf
 
 #import the UI_element module that we created that holds the elements like button, label etc. 
 # check the file under modules directory.
@@ -44,15 +42,8 @@ class SecureSendGUI(Gtk.Application):
         # Prevents the user from resizing the window.
         self.window.set_resizable(False)
 
-
-
-
         self.ui = SecureSendUI(self.window)
         self.ui.build_layout()
-
-
-
-
 
         # Shows the window on the screen
         self.window.present()
