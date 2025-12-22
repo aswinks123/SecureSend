@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 from modules.file_handler import choose_files_and_update
-
+from modules.file_sender import send_files
 
 # This defines a new class called SecureSendUI
 class SecureSendUI:
@@ -66,11 +66,23 @@ class SecureSendUI:
         #Adding Send button
         self.send_btn = Gtk.Button(label="Send Files") #Creates a button labeled “Send Files”.
         left_grid.attach(self.send_btn, 0, 4, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+        
+        # Function that handle sending logic
+        self.send_btn.connect("clicked", self.on_send_files_clicked)
 
 
         #Adding Clear button
         self.clear_btn = Gtk.Button(label="Clear") #Creates a button labeled “Clear”.
         left_grid.attach(self.clear_btn, 0, 5, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
+
+        # Feedback label to show the success or failure message
+        self.feedback_label = Gtk.Label(label="")
+        self.feedback_label.set_wrap(True)
+        left_grid.attach(self.feedback_label, 0, 7, 2, 1)  # row 5, spanning 2 columns
+
+
+
+
 
 
 #-----------------creating RIGHT SIDE Elements--------------------------
@@ -105,6 +117,12 @@ class SecureSendUI:
         self.clear_btn.connect("clicked", self.on_clear_clicked)
         buttons_box.append(self.clear_btn)
 
+
+
+
+
+
+
         # By default the no files are selected message is displayed in side the box.
         self.files_label = Gtk.Label(label="(No files selected)")
         right_box.append(self.files_label)
@@ -129,9 +147,25 @@ class SecureSendUI:
         self.files.clear()
         self.files_label.set_text("(No files selected)")
 
+        # Reset send feedback label
+        self.feedback_label.set_text("")
 
 
+    # function that handle sending logic
+    def on_send_files_clicked(self, button):
+        if not self.files:
+            print("No files selected!")
+            return
 
+        server_ip = self.ip_entry.get_text()
+        username = self.user_entry.get_text()
+        password = self.pass_entry.get_text()
+        dest_path = self.destination_entry.get_text()
+
+        success, fail = send_files(self.files, server_ip, username, password, dest_path)
+
+        result_text = f"✅ Sent: {len(success)} files\n\n❌ Failed: {len(fail)} files"
+        self.feedback_label.set_text(result_text)
 
 
 
