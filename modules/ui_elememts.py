@@ -32,8 +32,6 @@ class SecureSendUI:
 
 
 
-
-
         # Adding a grid inside the box. Gtk.Grid lets you arrange elements in rows and columns.
         # here we are creating left side grid, hold left side elemets of the box.
 
@@ -59,14 +57,11 @@ class SecureSendUI:
         self.pass_entry.set_visibility(False) #hides the text while typing
         left_grid.attach(self.pass_entry, 1, 2, 1, 1)
 
-
         #Same as the previous entry
         left_grid.attach(Gtk.Label(label="Destination Path:"), 0, 3, 1, 1)
         self.destination_entry = Gtk.Entry()
         self.destination_entry.set_text("/tmp/")  # Set default path
         left_grid.attach(self.destination_entry, 1, 3, 1, 1)
-
-
 
         #Adding Send button
         self.send_btn = Gtk.Button(label="Send Files") #Creates a button labeled “Send Files”.
@@ -76,8 +71,6 @@ class SecureSendUI:
         #Adding Clear button
         self.clear_btn = Gtk.Button(label="Clear") #Creates a button labeled “Clear”.
         left_grid.attach(self.clear_btn, 0, 5, 2, 1)# Placed in row 3, spanning 2 columns, so it’s centered under the entries.
-
-
 
 
 #-----------------creating RIGHT SIDE Elements--------------------------
@@ -96,41 +89,31 @@ class SecureSendUI:
         right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
         right_frame.set_child(right_box)
 
-
-
-
         # Horizontal box for the buttons (side by side)
         buttons_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
         right_box.append(buttons_box)
-
 
         # Add a choose file button inside the box
         self.choose_files_btn = Gtk.Button(label="Choose Files")
         self.choose_files_btn.set_hexpand(True)          
         self.choose_files_btn.connect("clicked", self.on_choose_files_clicked)
         buttons_box.append(self.choose_files_btn)
-        
-              
-
+       
         # "Clear" button
         self.clear_btn = Gtk.Button(label="Clear Files")
         self.clear_btn.set_hexpand(True)  
         self.clear_btn.connect("clicked", self.on_clear_clicked)
         buttons_box.append(self.clear_btn)
 
-
+        # By default the no files are selected message is displayed in side the box.
         self.files_label = Gtk.Label(label="(No files selected)")
         right_box.append(self.files_label)
-
 
         # Add the frame to the main hbox
         hbox.append(right_frame)
 
-
         #Returning the main container
-        return hbox  #Returns the main horizontal box so it can be used later if needed.
-
-
+        return hbox  #Returns the main horizontal box 
 
 
 
