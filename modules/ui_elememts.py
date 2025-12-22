@@ -140,11 +140,13 @@ class SecureSendUI:
 
     # This function is used to open a file picker when choose File button is clicked and display it in the box. its implementation is in modules/file_handler.py
     def on_choose_files_clicked(self, button):
+        self.feedback_label.set_text("")        
         choose_files_and_update(self.window, self.files_label, self.files)
 
     # This function is used to clear the files that ae choosen by select files button sialogue box.
     def on_clear_clicked(self, button):
         self.files.clear()
+        self.feedback_label.set_text("")
         self.files_label.set_text("(No files selected)")
 
         # Reset send feedback label
@@ -154,7 +156,9 @@ class SecureSendUI:
     # function that handle sending logic
     def on_send_files_clicked(self, button):
         if not self.files:
-            print("No files selected!")
+            #print("No files selected!")
+            self.feedback_label.set_text("No files selected!")
+
             return
 
         server_ip = self.ip_entry.get_text()
@@ -164,9 +168,12 @@ class SecureSendUI:
 
         success, fail = send_files(self.files, server_ip, username, password, dest_path)
 
-        result_text = f"✅ Sent: {len(success)} files\n\n❌ Failed: {len(fail)} files"
-        self.feedback_label.set_text(result_text)
+        if fail:
+            result_text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
+        else:
+            result_text = f"✅ Sent: {len(success)} files successfully!"
 
+            self.feedback_label.set_text(result_text)
 
 
 
