@@ -220,7 +220,7 @@ class SecureSendUI:
         self.send_btn.set_sensitive(True)
         return False
 
-
+    
     def send_files_thread(self, server_ip, username, password, dest_path):
 
             def progress_callback(fraction):
@@ -236,26 +236,6 @@ class SecureSendUI:
             )
 
             GLib.idle_add(self.on_send_complete, success, fail)
-
-
-
-
-
-
-        #  # Update feedback label
-        # if fail:
-        #     result_text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
-        # else:
-        #     result_text = f"✅ Sent: {len(success)} files successfully!"
-
-        #     self.feedback_label.set_text(result_text)
-
-
-
-
-
-
-
 
 
 
