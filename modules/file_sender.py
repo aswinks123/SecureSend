@@ -1,6 +1,11 @@
 import paramiko
 import os
 
+# For threading
+import threading
+from gi.repository import GLib
+
+
 def send_files(files, server_ip, username, password, dest_path, progress_callback=None):
     """
     Sends a list of files to a remote server via SCP (using paramiko).
@@ -45,3 +50,4 @@ def send_files(files, server_ip, username, password, dest_path, progress_callbac
         fail_list = files.copy()
 
     return success_list, fail_list
+

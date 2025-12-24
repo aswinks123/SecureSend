@@ -4,6 +4,13 @@ from gi.repository import Gtk
 from modules.file_handler import choose_files_and_update
 from modules.file_sender import send_files
 
+# For threading
+import threading
+from gi.repository import GLib
+
+
+
+
 # This defines a new class called SecureSendUI
 class SecureSendUI:
 
@@ -183,22 +190,65 @@ class SecureSendUI:
         password = self.pass_entry.get_text()
         dest_path = self.destination_entry.get_text()
 
-         # Define a callback to update progress bar
-        def progress_callback(fraction):
-            self.progress_bar.set_fraction(fraction)
-            self.progress_bar.set_text(f"{int(fraction*100)}%")
+
+        # Send files
+        #success, fail = send_files(self.files, server_ip, username, password, dest_path, progress_callback)
+        self.send_btn.set_sensitive(False)
+        self.progress_bar.set_fraction(0)
+        self.progress_bar.set_text("0%")
+
+        threading.Thread(
+            target=self.send_files_thread,
+            args=(server_ip, username, password, dest_path),
+            daemon=True
+        ).start()
 
 
-         # Send files
-        success, fail = send_files(self.files, server_ip, username, password, dest_path, progress_callback)
+    def update_progress(self, fraction):
+        self.progress_bar.set_fraction(fraction)
+        self.progress_bar.set_text(f"{int(fraction * 100)}%")
+        return False
 
-         # Update feedback label
+
+    def on_send_complete(self, success, fail):
         if fail:
-            result_text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
+            text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
         else:
-            result_text = f"✅ Sent: {len(success)} files successfully!"
+            text = f"✅ Sent: {len(success)} files successfully!"
 
-            self.feedback_label.set_text(result_text)
+        self.feedback_label.set_text(text)
+        self.send_btn.set_sensitive(True)
+        return False
+
+
+    def send_files_thread(self, server_ip, username, password, dest_path):
+
+            def progress_callback(fraction):
+                GLib.idle_add(self.update_progress, fraction)
+
+            success, fail = send_files(
+                self.files,
+                server_ip,
+                username,
+                password,
+                dest_path,
+                progress_callback
+            )
+
+            GLib.idle_add(self.on_send_complete, success, fail)
+
+
+
+
+
+
+        #  # Update feedback label
+        # if fail:
+        #     result_text = f"✅ Sent: {len(success)} files\n❌ Failed: {len(fail)} files"
+        # else:
+        #     result_text = f"✅ Sent: {len(success)} files successfully!"
+
+        #     self.feedback_label.set_text(result_text)
 
 
 
